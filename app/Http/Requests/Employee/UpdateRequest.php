@@ -35,7 +35,7 @@ class UpdateRequest extends FormRequest
             'second_last_name' => 'nullable|string|max:200',
             'gender' => 'nullable|string|max:2',
             'birthdate' => 'required|date',
-            'profile_photo' => 'nullable|string'
+            'profile_photo' => 'nullable|file'
         ];
     }
 
