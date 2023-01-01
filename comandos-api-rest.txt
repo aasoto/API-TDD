@@ -32,3 +32,26 @@ $this->call(EmployeeSeeder::class);
 
 //ejecutar los seeders con el comando
 php artisan db:seed
+
+/*--- REQUESTS ---*/
+//crear request para validar la información en métodos de guardar y actualizar
+php artisan make:request Employee/StoreRequest
+
+//configurar las reglas de validación y luego definir la funcion failedValidation
+    function failedValidation(Validator $validator)
+    {
+        if ($this->expectsJson()) {
+            $response = new Response($validator->errors(), 422);
+            throw new ValidationException($validator, $response);
+        }
+    }
+
+/*--- POSTMAN ---*/
+//probar los métodos en postman
+//STORE: para este método se necesita crear un formulario tipo form-data y checkear application/json y despues llenar todos los campos deacuerdo a los nombres que se encuentren en los campos de la base de datos.
+Body: form-data
+headers: Accept application/json
+
+//UPDATE:
+Body: x-www-form-urlencoded
+headers: Accept application/json

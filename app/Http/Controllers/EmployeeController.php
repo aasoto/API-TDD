@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Employee\StoreRequest;
+use App\Http\Requests\Employee\UpdateRequest;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
@@ -23,9 +25,16 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $data = $request->validated();
+        /**************** MOVER IMAGEN ****************/
+        if (isset($data['profile_photo'])) {
+            $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
+            $request->profile_photo->move(public_path('profile-photos'), $filename);
+        }
+        /*********************************************/
+        return response()->json(Employee::create($data));
     }
 
     /**
@@ -46,9 +55,19 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(UpdateRequest $request, Employee $employee)
     {
-        //
+        $data = $request->validated();
+        /**************** MOVER IMAGEN ****************/
+        if (isset($data['profile_photo'])) {
+            if ($employee->profile_photo) {
+                unlink('../../storage/app/public/profile-photos/'.$employee->profile_photo);
+            }
+            $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
+            $request->profile_photo->move(public_path('profile-photos'), $filename);
+        }
+        /*********************************************/
+        return response()->json($employee->update($data));
     }
 
     /**
@@ -59,6 +78,12 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        if ($employee->profile_photo) {
+            unlink('../storage/app/public/profile-photos/'.$employee->profile_photo);
+        }
+
+        $employee->delete();
+
+        return response()->json('deleted');
     }
 }
