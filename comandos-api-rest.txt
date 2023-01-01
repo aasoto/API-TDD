@@ -1,0 +1,34 @@
+/*-------------------- CREACIÓN DE UNA API REST CON LARAVEL -------------------------*/
+//crear proyecto en LARAVEL
+composer create-project laravel/laravel api-tdd
+
+//crear base de datos y escribir nombre de esta en el archivo .env
+//crear todas las migraciones necesarias
+php artisan make:migration create_employee_table
+
+//ejecutar las migraciones
+php artisan migrate
+
+//crear los controladores con su tipo y modelos respectivos
+php artisan make:controller EmployeeController --model Employee --api
+
+/*--- FACTORIES ---*/
+//en caso de necesitarse factories crearlos
+php artisan make:factory EmployeeFactory
+
+//declarar los factories en el archivo que se encuentra en vendor\laravel\framework\src\Illuminate\Database\Eloquent\Factories\HasFactory
+
+//para cambiar el generador de imagenes editar el archivo
+vendor/fakerphp/faker/src/Faker/Provider/Image.php
+//despues cambiar la BASE_URL, borrar la anterior y colocar la siguiente
+https://placehold.jp/
+
+/*--- SEEDERS ---*/
+//luego crear los seeders para tener data de prueba
+php artisan make:seeder EmployeeSeeder
+
+//invocar el seeder en el DatabaseSeeder
+$this->call(EmployeeSeeder::class);
+
+//ejecutar los seeders con el comando
+php artisan db:seed
