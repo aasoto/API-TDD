@@ -3,16 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\Employee;
-use GuzzleHttp\Psr7\UploadedFile as Psr7UploadedFile;
+use App\Traits\CreateRecords;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class EmployeeTest extends TestCase
 {
     // use RefreshDatabase;
+    use CreateRecords;
     /**
      * A basic feature test example.
      *
@@ -22,58 +22,44 @@ class EmployeeTest extends TestCase
     /** @test */
     public function list_employees()
     {
-        //revisa si hay registros en la base de datos
-        $total_employee = count(Employee::get());
-
-        //en caso deno haber registroscrea unos nuevos
-        if ($total_employee == 0) {
-            Employee::factory()->count(3)->create();
-            $total_employee = 3;
-        }
+        $this->create_employees(3);
 
         //entra a la ruta yverifica si retorna un dato JSON
         $response = $this->getJson('/api/employee');
         $response -> assertStatus(200)
         -> assertJson(fn (AssertableJson $json) =>
-            $json->has('current_page')
-                ->hasAny(
-                    'data',
-                    'first_page_url',
-                    'from',
-                    'last_page',
-                    'last_page_url',
-                    'links',
-                    'next_page_url',
-                    'path',
-                    'per_page',
-                    'prev_page_url',
-                    'to',
-                    'total'
-                )
+            $json   -> has('current_page')
+                    -> hasAny(
+                        'data',
+                        'first_page_url',
+                        'from',
+                        'last_page',
+                        'last_page_url',
+                        'links',
+                        'next_page_url',
+                        'path',
+                        'per_page',
+                        'prev_page_url',
+                        'to',
+                        'total'
+                    )
         );
     }
 
     /** @test */
     public function show_employee ()
     {
-        $total_employee = count(Employee::get());
-
-        if ($total_employee > 0) {
-            $employee = Employee::first();
-        } else {
-            $total_employee = Employee::factory()->count(3)->create();
-            $employee = Employee::first();
-        }
+        $employee = $this->create_and_get_employees(3);
 
         $response = $this->getJson('api/employee/'.$employee->id);
 
         $response ->assertStatus(200)
-         ->assertJson(fn (AssertableJson $json) =>
-            $json->where('id', $employee->id)
-                ->where('cc', $employee->cc)
-                ->where('first_name', $employee->first_name)
-                ->where('last_name', $employee->last_name)
-                ->where('birthdate', $employee->birthdate)
+        -> assertJson(fn (AssertableJson $json) =>
+            $json   -> where('id', $employee->id)
+                    -> where('cc', $employee->cc)
+                    -> where('first_name', $employee->first_name)
+                    -> where('last_name', $employee->last_name)
+                    -> where('birthdate', $employee->birthdate)
             ->etc()
         );
     }
@@ -95,8 +81,8 @@ class EmployeeTest extends TestCase
 
         $response->assertStatus(200)
         -> assertJson(fn (AssertableJson $json) =>
-            $json   ->has('id')
-                    ->hasAny(
+            $json   -> has('id')
+                    -> hasAny(
                         'cc',
                         'first_name',
                         'second_name',
@@ -114,14 +100,7 @@ class EmployeeTest extends TestCase
     /** @test */
     public function update_employee ()
     {
-        $total_employee = count(Employee::get());
-
-        if ($total_employee > 0) {
-            $employee = Employee::first();
-        } else {
-            $total_employee = Employee::factory()->count(3)->create();
-            $employee = Employee::first();
-        }
+        $employee = $this->create_and_get_employees();
 
         $new_profile_photo = fake()->image(storage_path('app/public/profile-photos'), 500, 500, null, false);
 
@@ -136,12 +115,12 @@ class EmployeeTest extends TestCase
 
         $response -> assertStatus(200)
             -> assertJson(fn (AssertableJson $json) =>
-            $json->where('id', $employee->id)
-                ->where('first_name', 'Martina')
-                ->where('second_name', 'Helena')
-                ->where('last_name', 'Manrique')
-                ->where('profile_photo', $new_profile_photo)
-            ->etc()
+            $json   -> where('id', $employee->id)
+                    -> where('first_name', 'Martina')
+                    -> where('second_name', 'Helena')
+                    -> where('last_name', 'Manrique')
+                    -> where('profile_photo', $new_profile_photo)
+                ->etc()
         );
 
     }
@@ -149,18 +128,11 @@ class EmployeeTest extends TestCase
     /** @test */
     public function delete_employee ()
     {
-        $total_employee = count(Employee::get());
-
-        if ($total_employee > 0) {
-            $employee = Employee::first();
-        } else {
-            $total_employee = Employee::factory()->count(3)->create();
-            $employee = Employee::first();
-        }
+        $employee = $this->create_and_get_employees();
 
         $response = $this->deleteJson('api/employee/'.$employee->id);
 
         $response -> assertStatus(200)
-            ->assertJsonFragment(['deleted']);
+            -> assertJsonFragment(['deleted']);
     }
 }

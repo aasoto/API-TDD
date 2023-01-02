@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\ContractorCompany;
+use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -11,8 +12,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 trait CreateRecords
 {
+    public function create_employees ($num = 0) {
+        $total_employees = count(Employee::get());
 
-    public function if_db_is_empty ($num = 0) {
+        if ($total_employees == 0) {
+            Employee::factory()->count($num)->create();
+        }
+    }
+
+    public function create_and_get_employees ($num = 0) {
+        $total_employees = count(Employee::get());
+
+        if ($total_employees > 0) {
+            $employee = Employee::inRandomOrder()->first();
+        } else {
+            Employee::factory()->count($num)->create();
+            $employee = Employee::inRandomOrder()->first();
+        }
+
+        return $employee;
+    }
+
+    public function create_contractors_companies ($num = 0) {
         $total_contractors = count(ContractorCompany::get());
 
         if ($total_contractors == 0) {
@@ -20,7 +41,7 @@ trait CreateRecords
         }
     }
 
-    public function if_db_is_empty_get_random_record ($num = 0) {
+    public function create_and_get_contractors_companies ($num = 0) {
         $total_contractors = count(ContractorCompany::get());
 
         if ($total_contractors > 0) {

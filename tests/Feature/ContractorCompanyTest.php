@@ -23,7 +23,7 @@ class ContractorCompanyTest extends TestCase
     /** @test */
     public function list_contractors ()
     {
-        $this->if_db_is_empty(3);
+        $this->create_contractors_companies(3);
 
         $response = $this->getJson('api/contractor-company');
         $response -> assertStatus(200)
@@ -49,7 +49,7 @@ class ContractorCompanyTest extends TestCase
     /** @test */
     public function show_contractor ()
     {
-        $contractor = $this->if_db_is_empty_get_random_record(3);
+        $contractor = $this->create_and_get_contractors_companies(3);
 
         $response = $this->getJson('api/contractor-company/'.$contractor->id);
 
@@ -104,7 +104,7 @@ class ContractorCompanyTest extends TestCase
     /** @test */
     public function update_contractor ()
     {
-        $contractor = $this->if_db_is_empty_get_random_record(3);
+        $contractor = $this->create_and_get_contractors_companies(3);
 
         $response = $this->putJson('api/contractor-company/'.$contractor->id, [
             'nit' => $contractor->nit,
@@ -129,7 +129,7 @@ class ContractorCompanyTest extends TestCase
     /** @test */
     public function delete_contractor ()
     {
-        $contractor = $this->if_db_is_empty_get_random_record(3);
+        $contractor = $this->create_and_get_contractors_companies(3);
 
         $response = $this->deleteJson('api/contractor-company/'.$contractor->id);
 
