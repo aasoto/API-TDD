@@ -27,7 +27,7 @@ class EmployeeTest extends TestCase
 
         //en caso deno haber registroscrea unos nuevos
         if ($total_employee == 0) {
-            Employee::factory()->count(3)->make();
+            Employee::factory()->count(3)->create();
             $total_employee = 3;
         }
 
@@ -61,13 +61,14 @@ class EmployeeTest extends TestCase
         if ($total_employee > 0) {
             $employee = Employee::first();
         } else {
-            $total_employee = Employee::factory()->count(3)->make();
+            $total_employee = Employee::factory()->count(3)->create();
             $employee = Employee::first();
         }
 
         $response = $this->getJson('api/employee/'.$employee->id);
 
-        $response ->assertJson(fn (AssertableJson $json) =>
+        $response ->assertStatus(200)
+         ->assertJson(fn (AssertableJson $json) =>
             $json->where('id', $employee->id)
                 ->where('cc', $employee->cc)
                 ->where('first_name', $employee->first_name)
@@ -89,7 +90,7 @@ class EmployeeTest extends TestCase
             'second_last_name' => fake()->lastName(),
             'gender' => fake()->randomElement(['m', 'f', 'o', 'ne']),
             'birthdate' => fake()->date(),
-            //'profile_photo' => fake()->image(storage_path('app/public/profile-photos'), 500, 500, null, false)
+            'profile_photo' => fake()->image(storage_path('app/public/profile-photos'), 500, 500, null, false)
         ]);
 
         $response->assertStatus(200)
@@ -103,9 +104,63 @@ class EmployeeTest extends TestCase
                         'second_last_name',
                         'gender',
                         'birthdate',
+                        'profile_photo',
                         'updated_at',
                         'created_at'
                     )
         );
+    }
+
+    /** @test */
+    public function update_employee ()
+    {
+        $total_employee = count(Employee::get());
+
+        if ($total_employee > 0) {
+            $employee = Employee::first();
+        } else {
+            $total_employee = Employee::factory()->count(3)->create();
+            $employee = Employee::first();
+        }
+
+        $new_profile_photo = fake()->image(storage_path('app/public/profile-photos'), 500, 500, null, false);
+
+        $response = $this->putJson('api/employee/'.$employee->id, [
+            'cc' => fake()->numerify('##########'),
+            'first_name' => 'Martina',
+            'second_name' => 'Helena',
+            'last_name' => 'Manrique',
+            'birthdate' => fake()->date(),
+            'profile_photo' => $new_profile_photo
+        ]);
+
+        $response -> assertStatus(200)
+            -> assertJson(fn (AssertableJson $json) =>
+            $json->where('id', $employee->id)
+                ->where('first_name', 'Martina')
+                ->where('second_name', 'Helena')
+                ->where('last_name', 'Manrique')
+                ->where('profile_photo', $new_profile_photo)
+            ->etc()
+        );
+
+    }
+
+    /** @test */
+    public function delete_employee ()
+    {
+        $total_employee = count(Employee::get());
+
+        if ($total_employee > 0) {
+            $employee = Employee::first();
+        } else {
+            $total_employee = Employee::factory()->count(3)->create();
+            $employee = Employee::first();
+        }
+
+        $response = $this->deleteJson('api/employee/'.$employee->id);
+
+        $response -> assertStatus(200)
+            ->assertJsonFragment(['deleted']);
     }
 }

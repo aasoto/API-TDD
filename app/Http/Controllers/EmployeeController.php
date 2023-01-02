@@ -30,8 +30,10 @@ class EmployeeController extends Controller
         $data = $request->validated();
         /**************** MOVER IMAGEN ****************/
         if (isset($data['profile_photo'])) {
-            $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
-            $request->profile_photo->move(public_path('profile-photos'), $filename);
+            if (!is_string($data['profile_photo'])) {
+                $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
+                $request->profile_photo->move(public_path('profile-photos'), $filename);
+            }
         }
         /*********************************************/
         return response()->json(Employee::create($data));
@@ -59,15 +61,19 @@ class EmployeeController extends Controller
     {
         $data = $request->validated();
         /**************** MOVER IMAGEN ****************/
+        //30a1f958c25bdd90839f64e18304de80
         if (isset($data['profile_photo'])) {
             if ($employee->profile_photo) {
-                unlink('../../storage/app/public/profile-photos/'.$employee->profile_photo);
+                unlink('storage/app/public/profile-photos/'.$employee->profile_photo);
             }
-            $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
-            $request->profile_photo->move(public_path('profile-photos'), $filename);
+            if (!is_string($data['profile_photo'])) {
+                $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
+                $request->profile_photo->move(public_path('profile-photos'), $filename);
+            }
         }
         /*********************************************/
-        return response()->json($employee->update($data));
+        $employee->update($data);
+        return response()->json($employee);
     }
 
     /**
@@ -79,7 +85,7 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         if ($employee->profile_photo) {
-            unlink('../storage/app/public/profile-photos/'.$employee->profile_photo);
+            unlink('storage/app/public/profile-photos/'.$employee->profile_photo);
         }
 
         $employee->delete();
