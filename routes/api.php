@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContractorCompanyController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('employee', EmployeeController::class)->except(['create', 'edit']);
+Route::resource('contractor-company', ContractorCompanyController::class)->except(['create', 'edit']);
