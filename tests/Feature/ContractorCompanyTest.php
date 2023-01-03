@@ -47,6 +47,28 @@ class ContractorCompanyTest extends TestCase
     }
 
     /** @test */
+    public function clean_list_contractor ()
+    {
+        $this->create_contractors_companies(3);
+
+        $response = $this->getJson('api/contractor-company/all');
+        $response -> assertStatus(200)
+        -> assertJson(fn (AssertableJson $json) =>
+            $json   -> whereType('0.id', 'integer')
+                    -> whereAllType([
+                        '0.nit' => 'string',
+                        '0.business_name' => 'string',
+                        '0.address' => 'string',
+                        '0.country_id' => 'integer',
+                        '0.tags' => 'string|null',
+                        '0.responsable' => 'string',
+                        '0.email' => 'string',
+                        '0.phone' => 'string'
+                    ])
+        );
+    }
+
+    /** @test */
     public function show_contractor ()
     {
         $contractor = $this->create_and_get_contractors_companies(3);

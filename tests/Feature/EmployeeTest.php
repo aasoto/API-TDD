@@ -47,6 +47,28 @@ class EmployeeTest extends TestCase
     }
 
     /** @test */
+    public function clean_list_employees ()
+    {
+        $this->create_employees(3);
+
+        $response = $this->getJson('api/employee/all');
+        $response -> assertStatus(200)
+        -> assertJson(fn (AssertableJson $json) =>
+            $json->whereType('0.id', 'integer')
+                ->whereAllType([
+                    '0.cc' => 'string',
+                    '0.first_name' => 'string',
+                    '0.second_name' => 'string|null',
+                    '0.last_name' => 'string',
+                    '0.second_last_name' => 'string|null',
+                    '0.gender' => 'string|null',
+                    '0.birthdate' => 'string',
+                    '0.profile_photo' => 'string|null'
+                ])
+        );
+    }
+
+    /** @test */
     public function show_employee ()
     {
         $employee = $this->create_and_get_employees(3);

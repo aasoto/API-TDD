@@ -20,5 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('employee/all', [EmployeeController::class, 'all']);
 Route::resource('employee', EmployeeController::class)->except(['create', 'edit']);
+Route::get('contractor-company/all', [ContractorCompanyController::class, 'all']);
 Route::resource('contractor-company', ContractorCompanyController::class)->except(['create', 'edit']);

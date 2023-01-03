@@ -20,6 +20,16 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Display a listing of the resource without pagination.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function all()
+    {
+        return response()->json(Employee::get());
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
