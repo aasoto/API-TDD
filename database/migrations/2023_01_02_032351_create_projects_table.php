@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->date('start_execution');
             $table->date('end_execution')->nullable();
-
+            $table->foreignId("contractor_company_id")->references('id')->on('contractor_company')->constrained();
             $table->timestamps();
         });
     }
