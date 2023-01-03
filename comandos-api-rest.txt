@@ -12,7 +12,7 @@ php artisan migrate
 //crear los controladores con su tipo y modelos respectivos
 php artisan make:controller EmployeeController --model Employee --api
 
-//LARAVEL BREEZE (Autenticación)
+/*--- LARAVEL BREEZE (Autenticación) ---*/
 //instalar Laravel Breeze
 composer require laravel/breeze --dev
 
@@ -24,6 +24,31 @@ php artisan breeze:install --dark       //instalación con modo oscuro
 php artisan migrate
 npm install
 npm run dev
+
+/*--- LARAVEL SANCTUM ---*/
+//SPA Authentication
+
+1. Configuración de dominios.
+//Buscar el archivo config/sanctum.php y colocar el dominio en la lista de dominios
+separados por comas, aquí está configurado por defecto el puerto del servidor de PHP
+127.0.0.1:8000
+
+2. Sanctum Middleware.
+//Buscar el archivo app/Http/Kernel.php y en la sesión y 'api' descomentar la linea de:
+\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+
+3.CORS & Cookies
+//Para habilitar el uso de la cookies se debe abrir el archivo config/cors.php y cambiar el 'supports_credentials' a true.
+//Despues se debe habilitar en el archivo resources/js/bootstrap.js la opción de axios llamada withCredentials pegando la siguiente línea de código:
+axios.defaults.withCredentials = true;
+//Finalimente si es necesario configurar algún subdominio se debe hacer con el archivo config/session.php
+'domain' => '.domain.com',
+
+4. Verficar.
+//Para verficar si la ruta está protegida pegar el siguiente comando en la consola del navegador web y probar con la sesión iniciada y cerrada.
+axios.get('/api/employee/all').then(response => {
+    console.log(response);
+});
 
 /*--- FACTORIES ---*/
 //en caso de necesitarse factories crearlos
