@@ -12,6 +12,19 @@ php artisan migrate
 //crear los controladores con su tipo y modelos respectivos
 php artisan make:controller EmployeeController --model Employee --api
 
+//LARAVEL BREEZE (Autenticación)
+//instalar Laravel Breeze
+composer require laravel/breeze --dev
+
+//Este comando publica las vistas, rutas y controladores de la autenticación para que se puede tener un control completo de los componentes y la implementación.
+php artisan breeze:install              //instalación normal
+php artisan breeze:install --dark       //instalación con modo oscuro
+
+//compilar la instalación de brezee
+php artisan migrate
+npm install
+npm run dev
+
 /*--- FACTORIES ---*/
 //en caso de necesitarse factories crearlos
 php artisan make:factory EmployeeFactory
