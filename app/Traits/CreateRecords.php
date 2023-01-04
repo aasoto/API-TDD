@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\ContractorCompany;
 use App\Models\Employee;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -52,5 +53,26 @@ trait CreateRecords
         }
 
         return $contractor;
+    }
+
+    public function create_projects ($num = 0) {
+        $total_projects = Project::count();
+
+        if ($total_projects == 0) {
+            Project::factory()->count($num)->create();
+        }
+    }
+
+    public function create_and_get_projects ($num = 0) {
+        $total_projects = Project::count();
+
+        if ($total_projects > 0) {
+            $project = Project::inRandomOrder()->first();
+        } else {
+            Project::factory()->count($num)->create();
+            $project = Project::inRandomOrder()->first();
+        }
+
+        return $project;
     }
 }

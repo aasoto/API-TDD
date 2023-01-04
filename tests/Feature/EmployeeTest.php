@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Employee;
+use App\Providers\RouteServiceProvider;
 use App\Traits\CreateRecords;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -49,6 +50,14 @@ class EmployeeTest extends TestCase
     /** @test */
     public function clean_list_employees ()
     {
+        $response = $this->post('/login', [
+            'email' => 'admin@gmail.com',
+            'password' => '12345678'
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(RouteServiceProvider::HOME);
+
         $this->create_employees(3);
 
         $response = $this->getJson('api/employee/all');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContractorCompanyController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('employee/all', [EmployeeController::class, 'all']);
     Route::get('contractor-company/all', [ContractorCompanyController::class, 'all']);
+    Route::get('projects/all', [ProjectController::class, 'all']);
 });
 
 Route::resource('employee', EmployeeController::class)->except(['create', 'edit']);
 Route::resource('contractor-company', ContractorCompanyController::class)->except(['create', 'edit']);
+Route::resource('projects', ProjectController::class)->except(['create', 'edit']);
+

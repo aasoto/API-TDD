@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ContractorCompany;
+use App\Providers\RouteServiceProvider;
 use App\Traits\CountryTrait;
 use App\Traits\CreateRecords;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -49,6 +50,14 @@ class ContractorCompanyTest extends TestCase
     /** @test */
     public function clean_list_contractor ()
     {
+        $response = $this->post('/login', [
+            'email' => 'admin@gmail.com',
+            'password' => '12345678'
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(RouteServiceProvider::HOME);
+
         $this->create_contractors_companies(3);
 
         $response = $this->getJson('api/contractor-company/all');
