@@ -112,19 +112,7 @@ class EmployeeTest extends TestCase
 
         $response->assertStatus(200)
         -> assertJson(fn (AssertableJson $json) =>
-            $json   -> has('id')
-                    -> hasAny(
-                        'cc',
-                        'first_name',
-                        'second_name',
-                        'last_name',
-                        'second_last_name',
-                        'gender',
-                        'birthdate',
-                        'profile_photo',
-                        'updated_at',
-                        'created_at'
-                    )
+            $json   -> where("status", "saved")
         );
     }
 

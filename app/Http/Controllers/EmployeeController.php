@@ -46,7 +46,9 @@ class EmployeeController extends Controller
             }
         }
         /*********************************************/
-        return response()->json(Employee::create($data));
+        Employee::create($data);
+        $response = json_decode('{"status":"saved"}');
+        return response()->json($response);
     }
 
     /**
