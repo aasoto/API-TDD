@@ -27,6 +27,7 @@ class ImageRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required|numeric',
             'profile_photo' => 'nullable|image:png,jpg,jpeg,svg'
         ];
     }

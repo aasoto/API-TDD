@@ -80,9 +80,7 @@ class EmployeeController extends Controller
             if ($employee->profile_photo && ($data['escenario'] == 'testing')) {
                 unlink('storage/app/public/profile-photos/'.$employee->profile_photo);
             }
-            if ($employee->profile_photo && ($data['escenario'] == 'app')) {
-                unlink('profile-photos/'.$employee->profile_photo);
-            }
+
             if (!is_string($data['profile_photo']) && ($data['escenario'] == 'testing')) {
                 $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
                 $request->profile_photo->move(public_path('profile-photos'), $filename);
@@ -98,15 +96,23 @@ class EmployeeController extends Controller
      */
     public function update_profile_photo (ImageRequest $request) {
         $data = $request->validated();
+        $employee = Employee::where('id', $data['id'])->first();
         /**************** MOVER IMAGEN ****************/
         if (isset($data['profile_photo'])) {
+            if ($employee->profile_photo) {
+                unlink('profile-photos/'.$employee->profile_photo);
+            }
             if (!is_string($data['profile_photo'])) {
                 $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
                 $request->profile_photo->move(public_path('profile-photos'), $filename);
             }
         }
-
-        return response()->json($data['profile_photo']);
+        if (isset($data['profile_photo'])) {
+            $response = $data['profile_photo'];
+        } else {
+            $response = $employee->profile_photo;
+        }
+        return response()->json($response);
     }
 
     /**
