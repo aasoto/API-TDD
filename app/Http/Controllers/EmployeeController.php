@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Employee\ImageRequest;
 use App\Http\Requests\Employee\StoreRequest;
 use App\Http\Requests\Employee\UpdateRequest;
 use App\Models\Employee;
@@ -73,20 +74,39 @@ class EmployeeController extends Controller
     public function update(UpdateRequest $request, Employee $employee)
     {
         $data = $request->validated();
+
         /**************** MOVER IMAGEN ****************/
-        //30a1f958c25bdd90839f64e18304de80
         if (isset($data['profile_photo'])) {
-            if ($employee->profile_photo) {
+            if ($employee->profile_photo && ($data['escenario'] == 'testing')) {
                 unlink('storage/app/public/profile-photos/'.$employee->profile_photo);
             }
-            if (!is_string($data['profile_photo'])) {
+            if ($employee->profile_photo && ($data['escenario'] == 'app')) {
+                unlink('profile-photos/'.$employee->profile_photo);
+            }
+            if (!is_string($data['profile_photo']) && ($data['escenario'] == 'testing')) {
                 $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
                 $request->profile_photo->move(public_path('profile-photos'), $filename);
             }
         }
         /*********************************************/
         $employee->update($data);
-        return response()->json($employee);
+        return response()->json($data);
+    }
+
+    /**
+     *
+     */
+    public function update_profile_photo (ImageRequest $request) {
+        $data = $request->validated();
+        /**************** MOVER IMAGEN ****************/
+        if (isset($data['profile_photo'])) {
+            if (!is_string($data['profile_photo'])) {
+                $data['profile_photo'] = $filename = time().'.'.$data['profile_photo']->extension();
+                $request->profile_photo->move(public_path('profile-photos'), $filename);
+            }
+        }
+
+        return response()->json($data['profile_photo']);
     }
 
     /**

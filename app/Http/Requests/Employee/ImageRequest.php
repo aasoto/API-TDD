@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Employee;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
-class UpdateRequest extends FormRequest
+class ImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,17 +26,8 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->route('employee'));
         return [
-            'cc' => 'required|numeric',
-            'first_name' => 'required|string|max:200',
-            'second_name' => 'nullable|string|max:200',
-            'last_name' => 'required|string|max:200',
-            'second_last_name' => 'nullable|string|max:200',
-            'gender' => 'nullable|string|max:2',
-            'birthdate' => 'required|date',
-            'profile_photo' => 'nullable',
-            'escenario' => 'required|string'
+            'profile_photo' => 'nullable|image:png,jpg,jpeg,svg'
         ];
     }
 

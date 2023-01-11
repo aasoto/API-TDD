@@ -37,3 +37,5 @@ Route::post('assing-employee-project', [InterceptionEmployeeProjectController::c
 Route::get('project-employee/{project}', [InterceptionEmployeeProjectController::class, 'show_project_employee'])->name('project-employee');
 Route::get('employee-project/{employee}', [InterceptionEmployeeProjectController::class, 'show_employee_project'])->name('employee-project');
 
+Route::post('update-profile-photo-employee', [EmployeeController::class, 'update_profile_photo']);
+
