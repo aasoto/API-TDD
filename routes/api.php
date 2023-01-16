@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContractorCompanyController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InterceptionEmployeeProjectController;
 use App\Http\Controllers\ProjectController;
@@ -32,6 +33,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::resource('employee', EmployeeController::class)->except(['create', 'edit']);
 Route::resource('contractor-company', ContractorCompanyController::class)->except(['create', 'edit']);
 Route::resource('projects', ProjectController::class)->except(['create', 'edit']);
+Route::resource('countries', CountryController::class)->except(['create', 'edit']);
+
 
 Route::post('assing-employee-project', [InterceptionEmployeeProjectController::class, 'store'])->name('assing-employee-project');
 Route::get('project-employee/{project}', [InterceptionEmployeeProjectController::class, 'show_project_employee'])->name('project-employee');

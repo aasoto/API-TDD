@@ -124,11 +124,11 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         if ($employee->profile_photo) {
-            unlink('storage/app/public/profile-photos/'.$employee->profile_photo);
+            unlink('profile-photos/'.$employee->profile_photo);
         }
 
         $employee->delete();
-
-        return response()->json('deleted');
+        $response = json_decode('{"status":"delete"}');
+        return response()->json($response);
     }
 }
