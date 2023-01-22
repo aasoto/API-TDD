@@ -9,6 +9,8 @@ class Country extends Model
 {
     use HasFactory;
 
+    protected  $table = 'countries';
+
     public function country ()
     {
         return $this->belongsTo(Country::class);

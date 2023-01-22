@@ -16,7 +16,7 @@ class ContractorCompanyController extends Controller
      */
     public function index()
     {
-        return response()->json(ContractorCompany::paginate(10));
+        return response()->json(ContractorCompany::with('country')->paginate(10));
     }
 
     /**
@@ -26,7 +26,7 @@ class ContractorCompanyController extends Controller
      */
     public function all()
     {
-        return response()->json(ContractorCompany::get());
+        return response()->json(ContractorCompany::select('id', 'business_name')->get());
     }
 
     /**
@@ -76,6 +76,7 @@ class ContractorCompanyController extends Controller
     {
         $contractorCompany->delete();
 
-        return response()->json('deleted');
+        $response = json_decode('{"status":"delete"}');
+        return response()->json($response);
     }
 }

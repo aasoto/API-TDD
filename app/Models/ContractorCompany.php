@@ -21,4 +21,9 @@ class ContractorCompany extends Model
         'email',
         'phone'
     ];
+
+    public function country ()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

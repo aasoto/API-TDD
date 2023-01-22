@@ -26,9 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /** RUTAS PROTEGIDAS CON LARAVEL SANCTUM */
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('employee/all', [EmployeeController::class, 'all']);
-    Route::get('contractor-company/all', [ContractorCompanyController::class, 'all']);
-    Route::get('projects/all', [ProjectController::class, 'all']);
 });
+Route::get('projects/all', [ProjectController::class, 'all']);
+Route::get('contractor-company/all', [ContractorCompanyController::class, 'all']);
 
 Route::resource('employee', EmployeeController::class)->except(['create', 'edit']);
 Route::resource('contractor-company', ContractorCompanyController::class)->except(['create', 'edit']);

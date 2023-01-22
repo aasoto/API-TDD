@@ -17,7 +17,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('contractor_company')->paginate(10);
+        $projects = Project::select('id', 'title', 'description', 'contractor_company_id', 'start_execution', 'end_execution')->with('contractor_company')->paginate(10);
         return response()->json($projects);
     }
 
@@ -51,7 +51,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $result = Project::find($project->id);
+        $result = Project::with('contractor_company')->find($project->id);
         return response()->json($result);
     }
 
@@ -78,6 +78,8 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
-        return response()->json('deleted');
+
+        $response = json_decode('{"status":"delete"}');
+        return response()->json($response);
     }
 }
