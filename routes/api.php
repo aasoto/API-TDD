@@ -39,6 +39,8 @@ Route::resource('countries', CountryController::class)->except(['create', 'edit'
 Route::post('assing-employee-project', [InterceptionEmployeeProjectController::class, 'store'])->name('assing-employee-project');
 Route::get('project-employee/{project}', [InterceptionEmployeeProjectController::class, 'show_project_employee'])->name('project-employee');
 Route::get('employee-project/{employee}', [InterceptionEmployeeProjectController::class, 'show_employee_project'])->name('employee-project');
+Route::get('is-assigned/{ids}', [InterceptionEmployeeProjectController::class, 'is_assigned']);
+Route::delete('delete-assigment/{id}', [InterceptionEmployeeProjectController::class, 'destroy']);
 
 Route::post('update-profile-photo-employee', [EmployeeController::class, 'update_profile_photo']);
 

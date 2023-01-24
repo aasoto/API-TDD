@@ -35,6 +35,27 @@ class InterceptionEmployeeProjectController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  $ids array ['employee_id', 'project_id']
+     * @return true || false
+     */
+    public function is_assigned($ids)
+    {
+        $ids = json_decode($ids);
+        $count = InterceptionEmployeeProject::where('employee_id', $ids[0])
+        -> where('project_id', $ids[1])
+        -> count();
+
+        if ($count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
@@ -77,11 +98,19 @@ class InterceptionEmployeeProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\InterceptionEmployeeProject  $interception
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy($id)
     {
-        //
+        $result = InterceptionEmployeeProject::where('employee_id', $id)->delete();
+
+        if ($result) {
+            $response = json_decode('{"status":"deleted"}');
+        } else {
+            $response = json_decode('{"status":"undeleted"}');
+        }
+
+        return response()->json($response);
     }
 }
